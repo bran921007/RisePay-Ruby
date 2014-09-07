@@ -1,3 +1,23 @@
+=begin
+ Risepay API helper
+
+ @category  API helper
+ @package   Risepay
+ @author    support@risepay.com
+ @copyright Copyright (c) 2014
+ @version   1.0
+
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+
+3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+=end
+
 require 'uri'
 require 'net/http'
 require 'rubygems'
@@ -9,7 +29,8 @@ require 'singleton'
 
 class Risepays < ActiveRecord::Base
 
-	attr_accessor :UserName, :Password, :url, :defFileds, :info, :RespMSG, :formData, :instance
+	attr_accessor :UserName, :Password, :url, :defFileds, :info, :RespMSG, :formData
+
 
 	def initialize(user,pass)
 		@UserName = user;
@@ -20,10 +41,13 @@ class Risepays < ActiveRecord::Base
     	@formData = [];
     	@url ="https://gateway1.risepay.com/ws/transact.asmx/ProcessCreditCard"
     	@amountFields = ['Amount', 'TipAmt', 'TaxAmt'];
+    	@@instance = nil;
 
 	end 	
 
-
+	def Risepays.getInstance
+		@@instance
+	end
 
 	def getGatewayUrl()
 		
@@ -39,25 +63,6 @@ class Risepays < ActiveRecord::Base
 		return @defFileds
 	end
 
-
-	def getRequest
-		return @entire= {"UserName"=> "JhonnDev",
-			"Password"=> "U0H464z4",
-			"TransType"=> "SALE",
-			'NameOnCard'=> "Jhonny",
-			'CardNum'=>"5149612222222229",
-			'ExpDate'=>"1214",
-			'Amount'=>"10",
-			"MagData"=> "",
-			"PNRef"=> "",
-			"ExtData"=>'',
-			'CVNum'=>"734",
-			'InvNum'=>"ABD42",
-			'Zip'=>"36124",
-			'Street'=>"Gran vio 25"
-		}
-
-	end	
 
 	def stringStartsWith(haystack, needle)
 
@@ -77,55 +82,22 @@ class Risepays < ActiveRecord::Base
 		self.url;
 	end;
 
-	def amountConver(num)
-		amount = number_to_currency(num, :precision => 2)
+	def amountConvert(num)
+		amount = '%.2f' % num
 		return amount
 	end;
 
 
-	def prepare()
-		@data = {
-			"UserName" =>@UserName,
-			"Password" =>@Password,
-			"ExtData"  =>''
-		}
-
-		#fix amounts
-		
-
-		#Construct ExtData
-		@formData.each do |f , value|
-			if (@defFileds).include? f
-			 	 @data['ExtData']+= "<#{f}>#{value}</#{f}>";
-				 @formData.delete(f)
-			else
-				@data[f] = value;
-			
-			end
-		end
-
-		# set defaults fields
-		@defFileds.each do |f|
-			if @data[f] == 	nil
-			 	@data[f] = '';
-			end 
-		end
-
-		return @data	
-	end
+	
 
 	def sale(opt = null)
 		if opt
 			@formData = opt
 		end
-		@formData["UserName"] = @UserName
-		@formData["Password"] = @Password
-		@formData["MagData"] = ""
-		@formData["PNRef"] = ""
-		@formData["ExtData"]=""
-		@formData["TransType"]="Sale"
 
-		return post(@formData)
+		@formData["TransType"]="SALE"
+
+		return prepare()
 
 	end
 
@@ -136,14 +108,9 @@ class Risepays < ActiveRecord::Base
 			@formData = opt
 		end
 
-		@formData["UserName"] = @UserName
-		@formData["Password"] = @Password
-		@formData["MagData"] = ""
-		@formData["PNRef"] = ""
-		@formData["ExtData"]=""
-		@formData["TransType"]="Auth"
+		@formData["TransType"]="AUTH"
 
-		return post(@formData)
+		return prepare()
 
 	end
 
@@ -153,14 +120,9 @@ class Risepays < ActiveRecord::Base
 			@formData = opt
 		end
 
-		@formData["UserName"] = @UserName
-		@formData["Password"] = @Password
-		@formData["MagData"] = ""
-		@formData["PNRef"] = ""
-		@formData["ExtData"]=""
 		@formData["TransType"]="Return"
 
-		return post(@formData)
+		return prepare()
 	end
 		
 
@@ -170,14 +132,9 @@ class Risepays < ActiveRecord::Base
 			@formData = opt
 		end
 
-		@formData["UserName"] = @UserName
-		@formData["Password"] = @Password
-		@formData["MagData"] = ""
-		@formData["PNRef"] = ""
-		@formData["ExtData"]=""
 		@formData["TransType"]="VOID"
 
-		return post(@formData)
+		return prepare()
 
 	end
 
@@ -186,28 +143,57 @@ class Risepays < ActiveRecord::Base
 		if opt
 			@formData = opt
 		end
-
-		@formData["UserName"] = @UserName
-		@formData["Password"] = @Password
-		@formData["MagData"] = ""
-		@formData["PNRef"] = ""
-		@formData["ExtData"]=""
+		
 		@formData["TransType"]="FORCE"
 
-		return post(@formData)
+		return prepare()
 
 	end
 
-	def convertResponde(xml)
+	def prepare()
 
+		@data = {};
+		@data["UserName"] = @UserName
+		@data["Password"] = @Password
+		@data["ExtData"] = ''
 
+		#fix amounts
+		@amountFields.each do |f|
+			@amountFields[2] = ''
+			if @formData[f]
+				@formData[f] = amountConvert(@formData[f])
+			end	
+		end
+
+		#Construct ExtData
+		@formData.each do |f , value|
+			if !((@defFileds).include? f)
+				 
+			 	 @data['ExtData']<< "<#{f}>#{value}</#{f}>";
+				 @formData.delete(f)
+			else
+				@data[f] = value;
+			
+			end
+		end
+
+		# set defaults fields
+		@defFileds.each do |f|
+			if @data[f] == 	nil
+			   	@data[f] = '';
+			end 
+		end
+
+		return post(@data)
 	end
+
+
 
 	def post(opts)
 	#data
 
 
-	uri = URI.parse("https://gateway1.risepay.com/ws/transact.asmx/ProcessCreditCard")
+	uri = URI.parse(@url)
 
 
     http = Net::HTTP.new(uri.host, uri.port)
@@ -222,7 +208,7 @@ class Risepays < ActiveRecord::Base
     xml= response.body
     session = Hash.from_xml(xml)
     resi = session['Response']
-		return resi['RespMSG']  
+	return resi['RespMSG']
 
 	end
 

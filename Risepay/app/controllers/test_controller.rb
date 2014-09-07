@@ -13,7 +13,6 @@ class TestController < ApplicationController
         data['InvNum']="ABD41";
         data['Zip']="36124";
         data['Street']="Gran vio 25";
-        data['Customer']="John Developer";
         data['TipAmt']=1;
 
   		@risepay = Risepays.new("JhonnDev","U0H464z4")
