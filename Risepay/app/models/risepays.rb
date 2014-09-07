@@ -68,12 +68,7 @@ class Risepays < ActiveRecord::Base
 
 		haystack.index(needle)=== 0
 	end;
-=begin
 
-	def hash_to_query(hash)
-	  return URI.encode(hash.map{|k,v| "#{k}=#{v}"}.join("&"))
-	end
-=end
 	def getInstance
 		return @instance
 	end
@@ -86,7 +81,6 @@ class Risepays < ActiveRecord::Base
 		amount = '%.2f' % num
 		return amount
 	end;
-
 
 	
 
