@@ -41,7 +41,7 @@ class Risepays < ActiveRecord::Base
     	@formData = [];
     	@url ="https://gateway1.risepay.com/ws/transact.asmx/ProcessCreditCard"
     	@amountFields = ['Amount', 'TipAmt', 'TaxAmt'];
-    	@@instance = nil;
+    	
 
 	end 	
 
