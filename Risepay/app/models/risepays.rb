@@ -25,7 +25,7 @@ require 'ostruct'
 require 'date'
 require 'time'
 require 'active_support'
-require 'singleton' 
+
 
 class Risepays < ActiveRecord::Base
 
@@ -45,16 +45,12 @@ class Risepays < ActiveRecord::Base
 
 	end 	
 
-	def Risepays.getInstance
-		@@instance
-	end
-
-	def getGatewayUrl()
+	def get_gateway_url()
 		
 		return @url 
 	end
 
-	def setGatewayUrl(url)
+	def set_gateway_url(url)
 		@url = url
 	end
 
@@ -64,18 +60,6 @@ class Risepays < ActiveRecord::Base
 	end
 
 
-	def stringStartsWith(haystack, needle)
-
-		haystack.index(needle)=== 0
-	end;
-
-	def getInstance
-		return @instance
-	end
-
-	def get_gateway_url
-		self.url;
-	end;
 
 	def amountConvert(num)
 		amount = '%.2f' % num
@@ -86,10 +70,12 @@ class Risepays < ActiveRecord::Base
 
 	def sale(opt = null)
 		if opt
+			
 			@formData = opt
+			
 		end
 
-		@formData["TransType"]="SALE"
+		@formData["TransType"]="Sale"
 
 		return prepare()
 
@@ -99,10 +85,11 @@ class Risepays < ActiveRecord::Base
 	def auth(opt = null)
 
 	    if opt
-			@formData = opt
+	    	
+			@formData = opt			
 		end
 
-		@formData["TransType"]="AUTH"
+		@formData["TransType"]="Auth"
 
 		return prepare()
 
@@ -111,8 +98,9 @@ class Risepays < ActiveRecord::Base
 	def returnTrans(opt = null)
 
 		if opt
+			
 			@formData = opt
-		end
+		end	
 
 		@formData["TransType"]="Return"
 
@@ -123,10 +111,11 @@ class Risepays < ActiveRecord::Base
 	def void(opt = null)
 
 		if opt
+			
 			@formData = opt
 		end
 
-		@formData["TransType"]="VOID"
+		@formData["TransType"]="Void"
 
 		return prepare()
 
@@ -134,11 +123,11 @@ class Risepays < ActiveRecord::Base
 
 	def capture(opt = null)
 
-		if opt
+		if opt		
 			@formData = opt
-		end
-		
-		@formData["TransType"]="FORCE"
+		end	
+
+		@formData["TransType"]="Force"
 
 		return prepare()
 
@@ -179,16 +168,35 @@ class Risepays < ActiveRecord::Base
 		end
 
 		return post(@data)
+		
+	end
+
+	def convertResponse(obj)
+		
+		@str = obj['ExtData']
+
+    	@str.split(",").each do |f|
+			arr = f.split('=');
+			arr[1] && (obj[arr[0]] = arr[1])
+        end
+        
+        @jsonlist = ['xmlns:xsd', 'xmlns:xsi', 'xmlns', 'ExtData']
+        
+        @jsonlist.each do |j|
+            obj.delete(j)
+            
+        end
+        if(obj['Result'] == "0")
+        	obj["BatchNum"] = obj["BatchNum"].sub("<BatchNum>000000</BatchNum>","");
+    	end
+
+        return obj
 	end
 
 
-
 	def post(opts)
-	#data
-
-
+	
 	uri = URI.parse(@url)
-
 
     http = Net::HTTP.new(uri.host, uri.port)
     http.verify_mode = OpenSSL::SSL::VERIFY_NONE
@@ -201,8 +209,17 @@ class Risepays < ActiveRecord::Base
     response = http.request(request)
     xml= response.body
     session = Hash.from_xml(xml)
-    resi = session['Response']
-	return resi['RespMSG']
+    res = session['Response']
+    json = convertResponse(res);
+	#return resi['RespMSG']
+
+	approved = false
+	if(json['Result'] == "0")
+		approved = true;
+		
+	end
+	json['Approved']=approved
+	return json
 
 	end
 
