@@ -30,30 +30,163 @@ To utilize, install <a href="http://rubyonrails.org/download/">ruby on rails</a>
   
 ### Sale Transaction
 To make a purchase using a credit card:
-  
-  Fix
+
+Functional API:
+
+```ruby
+
+@risepay = Risepays.new("demo","demo")
+
+data['NameOnCard']= "John Doe";
+data['CardNum']="4111111111111111";
+data['ExpDate']="1215";
+data['Amount']="10";
+data['CVNum']="734";
+
+@result =  @risepay.sale(data)
+
+def result_msg
+ @message
+	  if @result['Approved']
+	    @message = "Approved. Transaction ID = " + @result['PNRef'] +  "\n"  +    "AuthCode = " + @result['AuthCode']
+	  else
+	    @message =  "Declined " + @result['Message']
+	  end	
+
+	return @message
+end
+
+@msn = result_msg()
+```
 
 ### Authorization Transaction
 To make an authorization using a credit card:
+
+Functional API:
   
-  Fix
+```ruby
+
+@risepay = Risepays.new("demo","demo")
+
+data['NameOnCard']= "John Doe";
+data['CardNum']="4111111111111111";
+data['ExpDate']="1215";
+data['Amount']="10";
+data['CVNum']="734";
+
+@result =  @risepay.auth(data)
+
+def result_msg
+ @message
+	  if @result['Approved']
+	    @message = "Approved. Transaction ID = " + @result['PNRef'] +  "\n"  +    "AuthCode = " + @result['AuthCode']
+	  else
+	    @message =  "Declined " + @result['Message']
+	  end	
+
+	return @message
+end
+
+@msn = result_msg()
+```
   
 ### Void Transaction
 
 To void a transaction:
 
-  FIX ME
+Functional API:
+
+```ruby
+
+@risepay = Risepays.new("demo","demo")
+
+data['NameOnCard']= "John Doe";
+data['CardNum']="4111111111111111";
+data['ExpDate']="1215";
+data['Amount']="10";
+data['CVNum']="734";
+$data['PNRef'] = "24324";
+
+@result =  @risepay.void(data)
+
+def result_msg
+ @message
+	  if @result['Approved']
+	    @message = "Approved. Transaction ID = " + @result['PNRef'] +  "\n"  +    "AuthCode = " + @result['AuthCode']
+	  else
+	    @message =  "Declined " + @result['Message']
+	  end	
+
+	return @message
+end
+
+@msn = result_msg()
+```
   
 ### Capture Transaction
 
 To capture a previously Authorized transaction:
 
-  FIX ME
+Functional API:
+
+  ```ruby
+
+@risepay = Risepays.new("demo","demo")
+
+data['NameOnCard']= "John Doe";
+data['CardNum']="4111111111111111";
+data['ExpDate']="1215";
+data['Amount']="10";
+data['CVNum']="734";
+$data['PNRef'] = "24324";
+
+@result =  @risepay.capture(data)
+
+def result_msg
+ @message
+	  if @result['Approved']
+	    @message = "Approved. Transaction ID = " + @result['PNRef'] +  "\n"  +    "AuthCode = " + @result['AuthCode']
+	  else
+	    @message =  "Declined " + @result['Message']
+	  end	
+
+	return @message
+end
+
+@msn = result_msg()
+```
 
 ### Return Transaction
 
 To return a payment for already batched transaction:
 
-  FIX ME
+Functional API:
+
+ ```ruby
+
+@risepay = Risepays.new("demo","demo")
+
+data['NameOnCard']= "John Doe";
+data['CardNum']="4111111111111111";
+data['ExpDate']="1215";
+data['Amount']="10";
+data['CVNum']="734";
+$data['PNRef'] = "24324";
+
+@result =  @risepay.returnTrans(data)
+
+def result_msg
+ @message
+	  if @result['Approved']
+	    @message = "Approved. Transaction ID = " + @result['PNRef'] +  "\n"  +    "AuthCode = " + @result['AuthCode']
+	  else
+	    @message =  "Declined " + @result['Message']
+	  end	
+
+	return @message
+end
+
+@msn = result_msg()
+```
 
 To see complete list of an extra RisePay API variables, take a look at their <a href='https://gateway1.risepay.com/vt/nethelp/Documents/processcreditcard.htm'>documentation</a>.
