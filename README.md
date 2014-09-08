@@ -173,7 +173,7 @@ data['Amount']="10";
 data['CVNum']="734";
 $data['PNRef'] = "24324";
 
-@result =  @risepay.returnTrans(data)
+@result =  @risepay.return_trans(data)
 
 def result_msg
  @message
