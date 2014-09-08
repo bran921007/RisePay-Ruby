@@ -1,28 +1,32 @@
-== README
+RisePay-Ruby -- Simple Risepay Payment API wrapper
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+A Ruby module for interacting with the RisePay API
 
-Things you may want to cover:
+<hr>
 
-* Ruby version
+You can request developer credentials from our <a href='http://sales.risepay.com/rise-dev-access.html'>Dev Portal</a>.</br> If you would like to certify your application, then submit a <a href='http://sales.risepay.com/rise-cert-lab-access.html'>Cert Lab request</a>.
+<hr>
+### Table of Contents
+**[Initialization](#initialization)**
 
-* System dependencies
+**[Sale Transaction](#sale-transaction)**
 
-* Configuration
+**[Auth Transaction](#authorization-transaction)**
 
-* Database creation
+**[Void Transaction](#void-transaction)**
 
-* Database initialization
+**[Return Transaction](#return-transaction)**
 
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+**[Capture Transaction](#capture-transaction)**
 
 
-Please feel free to use a different markup language if you do not plan to run
+
+### Initialization
+
+To utilize, install <a href="http://rubyonrails.org/download/">ruby on rails</a>
+  
+  gem install rails
+  
+Open the proyect: Risepay/app/
+
 <tt>rake doc:app</tt>.
