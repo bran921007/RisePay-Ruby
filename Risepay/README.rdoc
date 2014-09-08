@@ -6,6 +6,8 @@ A Ruby module for interacting with the RisePay API
 
 You can request developer credentials from our <a href='http://sales.risepay.com/rise-dev-access.html'>Dev Portal</a>.</br> If you would like to certify your application, then submit a <a href='http://sales.risepay.com/rise-cert-lab-access.html'>Cert Lab request</a>.
 <hr>
+
+<hr>
 ### Table of Contents
 **[Initialization](#initialization)**
 
@@ -18,8 +20,6 @@ You can request developer credentials from our <a href='http://sales.risepay.com
 **[Return Transaction](#return-transaction)**
 
 **[Capture Transaction](#capture-transaction)**
-
-
 
 ### Initialization
 
