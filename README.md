@@ -48,7 +48,8 @@ data['CVNum']="734";
 def result_msg
  @message
 	  if @result['Approved']
-	    @message = "Approved. Transaction ID = " + @result['PNRef'] +  "\n"  +  "AuthCode = " + @result['AuthCode']
+	    @message = "Approved. Transaction ID = " + @result['PNRef'] +  "\n"  + 
+	    "AuthCode = " + @result['AuthCode']
 	  else
 	    @message =  "Declined " + @result['Message']
 	  end	
@@ -79,7 +80,8 @@ data['CVNum']="734";
 def result_msg
  @message
 	  if @result['Approved']
-	    @message = "Approved. Transaction ID = " + @result['PNRef'] +  "\n"  +  "AuthCode = " + @result['AuthCode']
+	    @message = "Approved. Transaction ID = " + @result['PNRef'] +  "\n"  +  
+	    "AuthCode = " + @result['AuthCode']
 	  else
 	    @message =  "Declined " + @result['Message']
 	  end	
@@ -112,7 +114,8 @@ $data['PNRef'] = "24324";
 def result_msg
  @message
 	  if @result['Approved']
-	    @message = "Approved. Transaction ID = " + @result['PNRef'] +  "\n"  +    "AuthCode = " + @result['AuthCode']
+	    @message = "Approved. Transaction ID = " + @result['PNRef'] +  "\n"  +   
+	    "AuthCode = " + @result['AuthCode']
 	  else
 	    @message =  "Declined " + @result['Message']
 	  end	
@@ -145,7 +148,8 @@ $data['PNRef'] = "24324";
 def result_msg
  @message
 	  if @result['Approved']
-	    @message = "Approved. Transaction ID = " + @result['PNRef'] +  "\n"  +    "AuthCode = " + @result['AuthCode']
+	    @message = "Approved. Transaction ID = " + @result['PNRef'] +  "\n"  +   
+	    "AuthCode = " + @result['AuthCode']
 	  else
 	    @message =  "Declined " + @result['Message']
 	  end	
@@ -178,7 +182,8 @@ $data['PNRef'] = "24324";
 def result_msg
  @message
 	  if @result['Approved']
-	    @message = "Approved. Transaction ID = " + @result['PNRef'] +  "\n"  +    "AuthCode = " + @result['AuthCode']
+	    @message = "Approved. Transaction ID = " + @result['PNRef'] +  "\n"  +   
+	    "AuthCode = " + @result['AuthCode']
 	  else
 	    @message =  "Declined " + @result['Message']
 	  end	
