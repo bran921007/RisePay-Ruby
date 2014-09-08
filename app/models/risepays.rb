@@ -95,7 +95,7 @@ class Risepays < ActiveRecord::Base
 
 	end
 
-	def returnTrans(opt = null)
+	def return_trans(opt = null)
 
 		if opt
 			
