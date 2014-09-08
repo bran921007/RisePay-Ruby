@@ -26,7 +26,34 @@ You can request developer credentials from our <a href='http://sales.risepay.com
 To utilize, install <a href="http://rubyonrails.org/download/">ruby on rails</a>
   
   gem install rails
-  
-Open the proyect: Risepay/app/
 
-<tt>rake doc:app</tt>.
+  
+### Sale Transaction
+To make a purchase using a credit card:
+  
+  Fix
+
+### Authorization Transaction
+To make an authorization using a credit card:
+  
+  Fix
+  
+### Void Transaction
+
+To void a transaction:
+
+  FIX ME
+  
+### Capture Transaction
+
+To capture a previously Authorized transaction:
+
+  FIX ME
+
+### Return Transaction
+
+To return a payment for already batched transaction:
+
+  FIX ME
+
+To see complete list of an extra RisePay API variables, take a look at their <a href='https://gateway1.risepay.com/vt/nethelp/Documents/processcreditcard.htm'>documentation</a>.
