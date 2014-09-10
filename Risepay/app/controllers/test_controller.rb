@@ -21,7 +21,7 @@ class TestController < ApplicationController
       	@result =  @risepay.sale(data)
 
 
-      	def result_msg
+      def result_msg
       		@message
 	      	if @result['Approved']
 	      		@message = "Approved. Transaction ID = " + @result['PNRef'] +  "\n"  +    "AuthCode = " + @result['AuthCode']
@@ -33,9 +33,12 @@ class TestController < ApplicationController
 	      	end	
 
 	      	return @message
-	     end
+	    end
 
-	    @msn = result_msg
+	    @msg = result_msg()
+
+
+
 
   end
 end

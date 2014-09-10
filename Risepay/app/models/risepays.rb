@@ -95,7 +95,7 @@ class Risepays < ActiveRecord::Base
 
 	end
 
-	def return_trans(opt = null)
+	def returnTrans(opt = null)
 
 		if opt
 			
@@ -171,7 +171,7 @@ class Risepays < ActiveRecord::Base
 		
 	end
 
-	def convertResponse(obj)
+	def convert_response(obj)
 		
 		@str = obj['ExtData']
 
@@ -204,14 +204,12 @@ class Risepays < ActiveRecord::Base
     request = Net::HTTP::Post.new(uri.request_uri)
 
     request.set_form_data(opts);
-    #request.add_field("Content-Type", "application/x-www-form-urlencoded")
 
     response = http.request(request)
     xml= response.body
     session = Hash.from_xml(xml)
     res = session['Response']
-    json = convertResponse(res);
-	#return resi['RespMSG']
+    json = convert_response(res);
 
 	approved = false
 	if(json['Result'] == "0")
