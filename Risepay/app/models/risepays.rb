@@ -25,6 +25,7 @@ require 'ostruct'
 require 'date'
 require 'time'
 require 'active_support'
+#require 'json'
 
 
 class Risepays < ActiveRecord::Base
@@ -173,22 +174,41 @@ class Risepays < ActiveRecord::Base
 
 	def convert_response(obj)
 		
-		@str = obj['ExtData']
+		#ConvertExtData
+		#Split plain data and XML into @matches hash
+		s = obj['ExtData']
+		s = s.match(/([,=0-9a-zA-Z]*)(\<.*\>)?/)
+		@str = s[1]
+		@str2 = s[2]
+	
 
     	@str.split(",").each do |f|
 			arr = f.split('=');
 			arr[1] && (obj[arr[0]] = arr[1])
         end
+
+        #Process XML Part
+=begin
+		@xmldata = Hash.from_xml(@str2)
+
         
+        if @xmldata
+        	for x in @xmldata
+        		obj[x] = @xmldata[x]
+        	end
+        end
+
+=end
+
         @jsonlist = ['xmlns:xsd', 'xmlns:xsi', 'xmlns', 'ExtData']
         
         @jsonlist.each do |j|
             obj.delete(j)
             
         end
-        if(obj['Result'] == "0")
-        	obj["BatchNum"] = obj["BatchNum"].sub("<BatchNum>000000</BatchNum>","");
-    	end
+        #if(obj['Result'] == "0")
+        #	obj["BatchNum"] = obj["BatchNum"].sub("<BatchNum>000000</BatchNum>","");
+    	#end	
 
         return obj
 	end

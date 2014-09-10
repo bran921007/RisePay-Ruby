@@ -8,7 +8,7 @@ class TestController < ApplicationController
         data['NameOnCard']= "Jhonny";
         data['CardNum']="5149612222222229";
         data['ExpDate']="1214";
-        data['Amount']="15";
+        data['Amount']="22";
         data['CVNum']="678";
         data['InvNum']="ABC123";
         data['Zip']="33139";
