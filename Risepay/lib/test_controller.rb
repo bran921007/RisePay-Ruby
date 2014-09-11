@@ -1,7 +1,7 @@
-#require_relative '../models/risepay.rb'
+require_relative 'risepays.rb'
 
 
-class TestController < ApplicationController
+class TestController
   def index
   	data ={}
 
@@ -15,7 +15,7 @@ class TestController < ApplicationController
         data['Street']="Gran vio 25";
         data['TipAmt']=1;
 
-  		@risepay = Risepays.new("JhonnDev","U0H464z4")
+  		@risepay = Risepays.new("demo","demo")
       	
 
       	@result =  @risepay.sale(data)

@@ -28,7 +28,7 @@ require 'active_support'
 #require 'json'
 
 
-class Risepays < ActiveRecord::Base
+class Risepays
 
 	attr_accessor :UserName, :Password, :url, :defFileds, :info, :RespMSG, :formData
 
@@ -188,7 +188,7 @@ class Risepays < ActiveRecord::Base
         end
 
         #Process XML Part
-=begin
+
 		@xmldata = Hash.from_xml(@str2)
 
         
@@ -197,8 +197,9 @@ class Risepays < ActiveRecord::Base
         		obj[x] = @xmldata[x]
         	end
         end
+        obj.delete("['BatchNum':'0000']")
 
-=end
+
 
         @jsonlist = ['xmlns:xsd', 'xmlns:xsi', 'xmlns', 'ExtData']
         
