@@ -4,7 +4,7 @@ require_relative 'risepays.rb'
 class TestController
   def index
   	data ={}
-    message
+    
 
     data['NameOnCard']= "Jhonny";
     data['CardNum']="5149612222222229";
@@ -23,14 +23,14 @@ class TestController
 
 
     def result_msg
-        
+      @message  
       if @result['Approved']
-       message = "Approved. Transaction ID = " + @result['PNRef'] +  "\n"  +    "AuthCode = " + @result['AuthCode']
+       @message = "Approved. Transaction ID = " + @result['PNRef'] +  "\n"  +    "AuthCode = " + @result['AuthCode']
       else
-       message =  "Declined " + @result['Message']
+       @message =  "Declined " + @result['Message']
 
       end	
-      return message
+      return @message
 
     end
 
