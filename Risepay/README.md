@@ -29,6 +29,10 @@ To utilize, install the gem
   
 go to the console and put that simple line of code 
 
+include the library on your proyect:
+
+    require_relative 'risepays.rb'
+
   
 ### Sale Transaction
 To make a purchase using a credit card:
