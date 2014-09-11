@@ -25,7 +25,7 @@ You can request developer credentials from our <a href='http://sales.risepay.com
 
 To utilize, install the gem
 
-  gem install risepay
+    gem install risepay
   
 go to the console and put that simple line of code 
 
