@@ -18,7 +18,7 @@ class TestController
     @result =''
     @msg = ''
     #Call your transaction type
-    Sale(@data)
+    sale_void(@data)
 
   end
 
@@ -35,8 +35,8 @@ class TestController
     return @message
   end
 
-
-  def Sale(data)
+    #Return a Sale transaction
+  def sale(data)
 
     @result =  @risepay.sale(data)
 
@@ -44,34 +44,41 @@ class TestController
 
   end
 
-  def Auth(data)
+  #Return a Void transaction
+  def sale_void(data)
 
-    @result =  @risepay.auth(data)
+    @sale =  @risepay.sale(data)
+    data['PNRef'] = @sale['PNRef']  
 
-    result_msg()
-  end  
-
-  def Void(data)
-    data["PNRef"] = "24323401"
-    @result =  @risepay.void(data)
-
-    result_msg()
-  end  
-
-  def Return(data)
-
-    data["PNRef"] = "24323401"
-    @result =  @risepay.returnTrans(data)
-
-    result_msg()
-  end  
-
-  def Capture(data)
-    data["PNRef"] = "24323401"
-    @result =  @risepay.capture(data)
-
+    @result  = @risepay.void(data)
     result_msg()
   end
+
+  #Return a Auth transaction
+  def auth(data)
+  
+    @result = @risepay.auth(data)
+    result_msg()
+  end
+
+  #Return a Capture transaction
+  def auth_capture(data)
+    @auth =  @risepay.auth(data)
+    data['PNRef'] = @auth['PNRef']  
+
+    @result  = @risepay.capture(data)
+    result_msg()
+  end  
+
+  #Return a "Return" transaction
+  def sale_return(data)
+
+    @sale =  @risepay.sale(data)
+    data['PNRef'] = @sale['PNRef']  
+
+    @result  = @risepay.returnTrans(data)
+    result_msg()
+  end  
 
 end
 
