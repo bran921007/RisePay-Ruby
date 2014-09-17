@@ -29,7 +29,7 @@ require 'active_support'
 
 class Risepays
 
-	attr_accessor :UserName, :Password, :url, :defFileds, :info, :RespMSG, :formData
+	attr_accessor :UserName, :Password, :url, :defFileds, :info, :RespMSG, :formData, :resp
 
 
 	def initialize(user,pass)
@@ -41,7 +41,7 @@ class Risepays
 		@formData = [];
 		@url ="https://gateway1.risepay.com/ws/transact.asmx/ProcessCreditCard"
 		@amountFields = ['Amount', 'TipAmt', 'TaxAmt'];
-
+		@resp = ''
 
 	end 	
 
@@ -130,6 +130,10 @@ class Risepays
 
 	end
 
+	def stringStartsWith(haystack, needle)
+		return haystack.index(needle) === 0
+	end
+
 	def prepare()
 
 		@data = {};
@@ -207,29 +211,43 @@ class Risepays
 
     def post(opts)
 
-    	uri = URI.parse(@url)
+    	begin
 
-    	http = Net::HTTP.new(uri.host, uri.port)
-    	http.verify_mode = OpenSSL::SSL::VERIFY_PEER
-    	http.use_ssl = (uri.scheme == "https")
-    	request = Net::HTTP::Post.new(uri.request_uri)
+	    	uri = URI.parse(@url)
 
-    	request.set_form_data(opts);
+	    	http = Net::HTTP.new(uri.host, uri.port)
+	    	http.read_timeout = 120
+	    	http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+	    	http.use_ssl = (uri.scheme == "https")
+	    	request = Net::HTTP::Post.new(uri.request_uri)
 
-    	response = http.request(request)
-    	xml= response.body
-    	session = Hash.from_xml(xml)
-    	res = session['Response']
-    	json = convert_response(res);
+	    	request.set_form_data(opts);
 
-    	approved = false
-    	if(json['Result'] == "0")
-    		approved = true;
+	    	response = http.request(request)
+	    	xml= response.body
+	    	session = Hash.from_xml(xml)
+	    	res = session['Response']
 
-    	end
-    	json['Approved']=approved
-    	return json
+	    	if (stringStartsWith(xml, "<?xml"))
+	    		convert_response(res);
+	    	else
+	    		@resp['Result'] = -999
+	    		@resp['Message'] = "Gateway error" + xml
+	    		return @resp
+	    	end
 
+	    	approved = false
+	    	if(@resp['Result'] == "0")
+	    		approved = true;
+
+	    	end
+	    	@resp['Approved']=approved
+	    	return @resp
+	    rescue Exception => e
+	    	@resp['Result'] = -999
+	    	@resp['Message'] = "Gateway error" + xml
+	    	return @resp
+	    end
     end
 
 end
