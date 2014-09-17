@@ -175,30 +175,36 @@ class Risepays
 	def convert_response(obj)
 		
 		@resp = obj
-		#ConvertExtData
-		#Split plain data and XML into @matches hash
-		s = @resp['ExtData']
-		s = s.match(/([,=0-9a-zA-Z]*)(\<.*\>)?/)
-		@str = s[1]
-		@str2 = s[2]
+		@resp['Approved'] = false
 
-		#Process plain text coma separated keypairs
-		@str.split(",").each do |f|
-			arr = f.split('=');
-			arr[1] && (@resp[arr[0]] = arr[1])
-		end
+		#Add Approved Value
+        if(@resp['Result'] == "0")
+    		@resp['Approved']= true
 
-        #Process XML Part
+			#ConvertExtData
+			#Split plain data and XML into @matches hash
+			matches = @resp['ExtData']
+			matches = matches.match(/([,=0-9a-zA-Z]*)(\<.*\>)?/)
+			@str = matches[1]
 
-        @xmldata = Hash.from_xml(@str2)
+			#Process plain text coma separated keypairs
+			@str.split(",").each do |f|
+				arr = f.split('=');
+				arr[1] && (@resp[arr[0]] = arr[1])
+			end
 
-        
-        if @xmldata
-        	for x in @xmldata
-        		@resp[x] = @xmldata[x]
-        	end
+	        #Process XML Part
+	        if(matches.length == 2)
+	        @xmldata = Hash.from_xml(matches[2])
+	    	end
+	        
+	        if @xmldata
+	        	for x in @xmldata
+	        		@resp[x] = @xmldata[x]
+	        	end
+	        end
+
         end
-
         @jsonlist = ['xmlns:xsd', 'xmlns:xsi', 'xmlns', 'ExtData']
         
         @jsonlist.each do |j|
@@ -206,11 +212,6 @@ class Risepays
 
         end	
 
-        #Add Approved Value
-
-    	if(@resp['Result'] == "0")
-    		@resp['Approved']= true
-    	end
 
     	if(!@resp['Message'])
     		@resp['Message'] = "";
