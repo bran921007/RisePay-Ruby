@@ -174,17 +174,18 @@ class Risepays
 
 	def convert_response(obj)
 		
+		@resp = obj
 		#ConvertExtData
 		#Split plain data and XML into @matches hash
-		s = obj['ExtData']
+		s = @resp['ExtData']
 		s = s.match(/([,=0-9a-zA-Z]*)(\<.*\>)?/)
 		@str = s[1]
 		@str2 = s[2]
 
-
+		#Process plain text coma separated keypairs
 		@str.split(",").each do |f|
 			arr = f.split('=');
-			arr[1] && (obj[arr[0]] = arr[1])
+			arr[1] && (@resp[arr[0]] = arr[1])
 		end
 
         #Process XML Part
@@ -194,18 +195,24 @@ class Risepays
         
         if @xmldata
         	for x in @xmldata
-        		obj[x] = @xmldata[x]
+        		@resp[x] = @xmldata[x]
         	end
         end
 
         @jsonlist = ['xmlns:xsd', 'xmlns:xsi', 'xmlns', 'ExtData']
         
         @jsonlist.each do |j|
-        	obj.delete(j)
+        	@resp.delete(j)
 
         end	
 
-        return obj
+        #Add Approved Value
+
+    	if(@resp['Result'] == "0")
+    		@resp['Approved']= true
+    	end
+    	  
+        return @resp
 	end
 
 
@@ -217,7 +224,7 @@ class Risepays
 
 	    	http = Net::HTTP.new(uri.host, uri.port)
 	    	http.read_timeout = 120
-	    	http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+	    	http.verify_mode = OpenSSL::SSL::VERIFY_PEER
 	    	http.use_ssl = (uri.scheme == "https")
 	    	request = Net::HTTP::Post.new(uri.request_uri)
 
