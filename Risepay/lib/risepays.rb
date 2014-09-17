@@ -196,13 +196,14 @@ class Risepays
 	        #Process XML Part
 	        if(matches.length == 2)
 	        @xmldata = Hash.from_xml(matches[2])
-	    	end
+	    	
 	        
-	        if @xmldata
-	        	for x in @xmldata
-	        		@resp[x] = @xmldata[x]
-	        	end
-	        end
+		        if @xmldata
+		        	for x in @xmldata
+		        		@resp[x] = @xmldata[x]
+		        	end
+		        end
+		    end    
 
         end
         @jsonlist = ['xmlns:xsd', 'xmlns:xsi', 'xmlns', 'ExtData']
