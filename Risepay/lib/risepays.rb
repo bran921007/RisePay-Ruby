@@ -211,6 +211,14 @@ class Risepays
     	if(@resp['Result'] == "0")
     		@resp['Approved']= true
     	end
+
+    	if(!@resp['Message'])
+    		@resp['Message'] = "";
+    	end
+
+    	if(@resp['RespMSG'])
+    		@resp['Message'] = @resp['Message'] + " " + @resp['RespMSG'];
+    	end
     	  
         return @resp
 	end
@@ -243,12 +251,6 @@ class Risepays
 	    		return @resp
 	    	end
 
-	    	approved = false
-	    	if(@resp['Result'] == "0")
-	    		approved = true;
-
-	    	end
-	    	@resp['Approved']=approved
 	    	return @resp
 	    rescue Exception => e
 	    	@resp['Result'] = -999
