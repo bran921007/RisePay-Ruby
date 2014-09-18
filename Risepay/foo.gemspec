@@ -1,10 +1,9 @@
 $:.unshift(File.join(File.dirname(__FILE__), 'lib'))
 
-require 'risepay.rb'
 
 Gem::Specification.new do |s|
   s.name        = 'risepay'
-  s.version     = '1.0.2'
+  s.version     = '1.0.3'
   s.date        = '2010-09-08'
   s.summary     = "Risepay API library"
   s.description = "Risepay API library on Ruby"
