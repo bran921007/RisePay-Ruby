@@ -1,3 +1,7 @@
+$:.unshift(File.join(File.dirname(__FILE__), 'lib'))
+
+require 'risepay.rb'
+
 Gem::Specification.new do |s|
   s.name        = 'risepay'
   s.version     = '1.0.1'
@@ -10,4 +14,9 @@ Gem::Specification.new do |s|
   s.homepage    =
     'http://www.risepay.com/'
   s.license       = 'risepay'
+  
+  s.files = `git ls-files`.split("\n")
+  s.test_files    = `git ls-files -- test/*`.split("\n")
+  s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
+  s.require_paths = ['lib']
 end
